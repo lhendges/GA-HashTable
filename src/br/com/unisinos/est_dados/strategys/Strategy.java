@@ -1,6 +1,13 @@
 package br.com.unisinos.est_dados.strategys;
 
-public interface Strategy {
+public abstract class Strategy {
 
-    int getIndexByHash(int occupiedIndex, int j, int m);
+    public int getIndexByHash(int occupiedIndex, int j, int m) {
+        return 0;
+    }
+
+    public int getIndexByHash(int key, int occupiedIndex, int j, int m, int q) {
+        return 0;
+    }
+
 }

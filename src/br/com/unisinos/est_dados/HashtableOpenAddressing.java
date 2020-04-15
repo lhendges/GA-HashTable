@@ -12,13 +12,13 @@ import static java.util.Objects.nonNull;
 public class HashtableOpenAddressing<V> implements Hashtable<V> {
 
     private final Item[] array;
-    private final int valueForHashing;
+    private final int valueForDoubleHashing;
 
     private Strategy strategy;
 
     public HashtableOpenAddressing(int m, int q, int probing) {
         this.array = new Item[m];
-        this.valueForHashing = q;
+        this.valueForDoubleHashing = q;
         if (probing == StrategyType.LINEAR_PROBING.getIndex()) {
             this.strategy = new LinearProbing();
         } else if (probing == StrategyType.QUADRATIC_PROBING.getIndex()) {
@@ -31,39 +31,50 @@ public class HashtableOpenAddressing<V> implements Hashtable<V> {
     @Override
     public Item<V> delete(int key) {
         Item deletedItem = null;
-        int index = hashFunction(key, array.length);
+        int primaryIndex = hashFunction(key, array.length);
+        int recalculatedIndex = primaryIndex;
         int j = 0;
         do {
-            if (nonNull(array[index]) && array[index].getKey() == key) {
-                deletedItem = array[index];
-                array[index] = null;
+            if (nonNull(array[recalculatedIndex]) && array[recalculatedIndex].getKey() == key) {
+                deletedItem = array[recalculatedIndex];
+                array[recalculatedIndex] = null;
+                j = array.length;
             } else {
-                index = strategy.getIndexByHash(hashFunction(key, array.length), j++, array.length);
+                if (strategy instanceof DoubleHashing) {
+                    recalculatedIndex = strategy.getIndexByHash(key, hashFunction(key, array.length), j, array.length, valueForDoubleHashing);
+                } else {
+                    recalculatedIndex = strategy.getIndexByHash(primaryIndex, j, key);
+                }
             }
-        } while (j < array.length);
+        } while (j++ < array.length);
         return deletedItem;
     }
 
     @Override
     public int insert(Item<V> item) {
-        int index = hashFunction(item.getKey(), array.length);
-        for (int j = 0; j < array.length && nonNull(array[index]); j++) {
-            index = strategy.getIndexByHash(hashFunction(item.getKey(), array.length), j, array.length);
+        int primaryIndex = hashFunction(item.getKey(), array.length);
+        int recalculatedIndex = primaryIndex;
+        for (int j = 0; j < array.length && nonNull(array[recalculatedIndex]); j++) {
+            if (strategy instanceof DoubleHashing) {
+                recalculatedIndex = strategy.getIndexByHash(item.getKey(), hashFunction(item.getKey(), array.length), j, array.length, valueForDoubleHashing);
+            } else {
+                recalculatedIndex = strategy.getIndexByHash(primaryIndex, j, item.getKey());
+            }
         }
-        array[index] = item;
-        return index;
+        array[recalculatedIndex] = item;
+        return recalculatedIndex;
     }
 
-    //Melhorar código
     @Override
     public Item<V> search(int key) {
-        int index = hashFunction(key, array.length);
+        int primaryIndex = hashFunction(key, array.length);
+        int recalculatedIndex = primaryIndex;
         int j = 0;
         do {
-            if (nonNull(array[index]) && array[index].getKey() == key) {
-                return array[index];
+            if (nonNull(array[recalculatedIndex]) && array[recalculatedIndex].getKey() == key) {
+                return array[recalculatedIndex];
             } else {
-                index = strategy.getIndexByHash(hashFunction(key, array.length), j++, array.length);
+                recalculatedIndex = strategy.getIndexByHash(hashFunction(key, array.length), j++, array.length);
             }
         } while (j < array.length - 1);
         return null;
@@ -73,7 +84,7 @@ public class HashtableOpenAddressing<V> implements Hashtable<V> {
     public void print() {
         for (int i = 0; i < array.length; i++) {
             Integer key = nonNull(array[i]) ? array[i].getKey() : null;
-            String value = nonNull(array[i]) ? (String) array[i].getValue() : null;
+            String value = nonNull(array[i]) ? (String) array[i].getValue() : "vazio";
             System.out.println("index -> " + i + " chave: " + key + " valor: " + value);
         }
     }

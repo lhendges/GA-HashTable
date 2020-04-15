@@ -1,6 +1,6 @@
 package br.com.unisinos.est_dados.strategys;
 
-public class QuadraticProbing implements Strategy {
+public class QuadraticProbing extends Strategy {
 
     @Override
     public int getIndexByHash(int occupiedIndex, int j, int m) {

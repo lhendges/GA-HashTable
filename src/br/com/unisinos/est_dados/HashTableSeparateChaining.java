@@ -7,44 +7,63 @@ import br.com.unisinos.est_dados.strategys.LinearProbing;
 import br.com.unisinos.est_dados.strategys.QuadraticProbing;
 import br.com.unisinos.est_dados.strategys.Strategy;
 
-import java.util.LinkedList;
+import java.util.*;
+
+import static java.util.Objects.nonNull;
 
 public class HashTableSeparateChaining implements Hashtable {
 
     private final LinkedList<Item>[] array;
-    private final int valueForHashing;
-
     private Strategy strategy;
 
-    public HashTableSeparateChaining(int m, int q, int probing) {
+    public HashTableSeparateChaining(int m) {
         this.array = new LinkedList[m];
-        this.valueForHashing = q;
-        if (probing == StrategyType.LINEAR_PROBING.getIndex()) {
-            this.strategy = new LinearProbing();
-        } else if (probing == StrategyType.QUADRATIC_PROBING.getIndex()) {
-            this.strategy = new QuadraticProbing();
-        } else if (probing == StrategyType.DOUBLE_PROBING.getIndex()) {
-            this.strategy = new DoubleHashing();
-        }
     }
 
     @Override
     public Item delete(int key) {
-        return null;
+        int index = hashFunction(key, array.length);
+        Item deletedItem = search(key);
+        if (nonNull(deletedItem)) {
+            array[index].removeIf(item -> item.getKey() == key);
+        }
+        return deletedItem;
     }
 
     @Override
     public int insert(Item item) {
-        return 0;
+        int index = hashFunction(item.getKey(), array.length);
+        array[index].add(item);
+        return index;
     }
 
     @Override
     public Item search(int key) {
-        return null;
+        int index = hashFunction(key, array.length);
+        return array[index].stream()
+                .filter(item -> item.getKey() == key)
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
     public void print() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i <= array.length - 1; i++) {
+            stringBuilder.append("(posição = ");
+            stringBuilder.append(i);
+            stringBuilder.append(")");
+            if (nonNull(array[i])) {
+                array[i].stream().peek(item -> {
+                    stringBuilder.append(item.getValue());
+                    stringBuilder.append(",");
+                }).close();
+            }
+        }
+        stringBuilder.toString();
+    }
 
+    private int hashFunction(int key, int m) {
+        return key % m;
     }
 }
