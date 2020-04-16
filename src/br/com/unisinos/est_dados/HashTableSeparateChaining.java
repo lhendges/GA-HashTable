@@ -1,20 +1,15 @@
 package br.com.unisinos.est_dados;
 
 import br.com.unisinos.est_dados.domain.Item;
-import br.com.unisinos.est_dados.domain.StrategyType;
-import br.com.unisinos.est_dados.strategys.DoubleHashing;
-import br.com.unisinos.est_dados.strategys.LinearProbing;
-import br.com.unisinos.est_dados.strategys.QuadraticProbing;
-import br.com.unisinos.est_dados.strategys.Strategy;
 
-import java.util.*;
+import java.util.LinkedList;
 
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 public class HashTableSeparateChaining implements Hashtable {
 
     private final LinkedList<Item>[] array;
-    private Strategy strategy;
 
     public HashTableSeparateChaining(int m) {
         this.array = new LinkedList[m];
@@ -33,6 +28,7 @@ public class HashTableSeparateChaining implements Hashtable {
     @Override
     public int insert(Item item) {
         int index = hashFunction(item.getKey(), array.length);
+        if (isNull(array[index])) array[index] = new LinkedList<>();
         array[index].add(item);
         return index;
     }
@@ -40,27 +36,32 @@ public class HashTableSeparateChaining implements Hashtable {
     @Override
     public Item search(int key) {
         int index = hashFunction(key, array.length);
-        return array[index].stream()
-                .filter(item -> item.getKey() == key)
-                .findFirst()
-                .orElse(null);
+        return isNull(array[index]) ? null : array[index].stream().filter(item -> item.getKey() == key).findFirst().orElse(null);
     }
 
     @Override
     public void print() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i <= array.length - 1; i++) {
+        for (int i = 0; i < array.length; i++) {
             stringBuilder.append("(posição = ");
             stringBuilder.append(i);
-            stringBuilder.append(")");
+            stringBuilder.append("): ");
             if (nonNull(array[i])) {
-                array[i].stream().peek(item -> {
+                stringBuilder.append(" valores = ");
+                array[i].forEach(item -> {
+                    stringBuilder.append("key: ");
+                    stringBuilder.append(item.getKey());
+                    stringBuilder.append(" - valor: ");
                     stringBuilder.append(item.getValue());
-                    stringBuilder.append(",");
-                }).close();
+                    stringBuilder.append(", ");
+                });
+                System.out.println(stringBuilder.toString());
+            } else {
+                stringBuilder.append("vazio");
+                System.out.println(stringBuilder.toString());
             }
+            stringBuilder.setLength(0);
         }
-        stringBuilder.toString();
     }
 
     private int hashFunction(int key, int m) {

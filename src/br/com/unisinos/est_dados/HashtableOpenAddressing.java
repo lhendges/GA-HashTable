@@ -43,7 +43,7 @@ public class HashtableOpenAddressing<V> implements Hashtable<V> {
                 if (strategy instanceof DoubleHashing) {
                     recalculatedIndex = strategy.getIndexByHash(key, hashFunction(key, array.length), j, array.length, valueForDoubleHashing);
                 } else {
-                    recalculatedIndex = strategy.getIndexByHash(primaryIndex, j, key);
+                    recalculatedIndex = strategy.getIndexByHash(primaryIndex, j, array.length);
                 }
             }
         } while (j++ < array.length);
@@ -58,7 +58,7 @@ public class HashtableOpenAddressing<V> implements Hashtable<V> {
             if (strategy instanceof DoubleHashing) {
                 recalculatedIndex = strategy.getIndexByHash(item.getKey(), hashFunction(item.getKey(), array.length), j, array.length, valueForDoubleHashing);
             } else {
-                recalculatedIndex = strategy.getIndexByHash(primaryIndex, j, item.getKey());
+                recalculatedIndex = strategy.getIndexByHash(primaryIndex, j, array.length);
             }
         }
         array[recalculatedIndex] = item;
@@ -74,9 +74,13 @@ public class HashtableOpenAddressing<V> implements Hashtable<V> {
             if (nonNull(array[recalculatedIndex]) && array[recalculatedIndex].getKey() == key) {
                 return array[recalculatedIndex];
             } else {
-                recalculatedIndex = strategy.getIndexByHash(hashFunction(key, array.length), j++, array.length);
+                if (strategy instanceof DoubleHashing) {
+                    recalculatedIndex = strategy.getIndexByHash(key, hashFunction(key, array.length), j, array.length, valueForDoubleHashing);
+                } else {
+                    recalculatedIndex = strategy.getIndexByHash(hashFunction(key, array.length), j, array.length);
+                }
             }
-        } while (j < array.length - 1);
+        } while (j++ < array.length);
         return null;
     }
 
