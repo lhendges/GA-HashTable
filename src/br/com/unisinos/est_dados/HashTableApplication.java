@@ -9,9 +9,17 @@ import java.util.Random;
 
 public class HashTableApplication {
 
+    public static final int CONVERSION_RATE_NANO_TO_SECONDS = 1_000_000_000;
+
     public static void main(String[] args) {
 
-        // A utilização de hashtables proporciona uma velocidade muito maior na busca por elementos específicos quando comparamos a uma simples Lista.
+
+        /*
+        A utilização de hashtables (ou outras estruturas de dados baseadas em hash) pode ser muito benéfica para a realização de buscas
+        em massas de dados muito grandes.
+
+        Para simular esses casos iremos popular uma Lista e um HashTables com 1 milhão de registros e comparar o tempo necessário para buscar o elemento que possui a maior chave.
+        * */
 
         int size = 1_000_000;
 
@@ -32,7 +40,7 @@ public class HashTableApplication {
         Long initialTimeForListSearch = System.nanoTime();
         System.out.println("Chave encontrada: " + list.stream().filter(item -> item.getKey() == keyToFind).findFirst().get().getKey());
         Long finalTimeForListSearch = System.nanoTime();
-        double listResult = (double) (finalTimeForListSearch - initialTimeForListSearch) / 1_000_000_000;
+        double listResult = (double) (finalTimeForListSearch - initialTimeForListSearch) / CONVERSION_RATE_NANO_TO_SECONDS;
 
         System.out.println();
         System.out.println("Tempo necessário para concluir a busca na Lista (em segundos): " + listResult);
@@ -42,7 +50,7 @@ public class HashTableApplication {
         Long initialTimeForHashtableSearch = System.nanoTime();
         System.out.println("Chave encontrada: " + hashtable.search(keyToFind).getKey());
         Long finalTimeTimeForHashtableSearch = System.nanoTime();
-        double hashTableResult = (double) (finalTimeTimeForHashtableSearch - initialTimeForHashtableSearch) / 1_000_000_000;
+        double hashTableResult = (double) (finalTimeTimeForHashtableSearch - initialTimeForHashtableSearch) / CONVERSION_RATE_NANO_TO_SECONDS;
 
         System.out.println();
         System.out.println("Tempo necessário para concluir a busca na HashTable (em segundos): " + hashTableResult);
