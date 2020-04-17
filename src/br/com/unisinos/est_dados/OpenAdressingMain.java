@@ -21,7 +21,7 @@ public class OpenAdressingMain {
         Item item5 = new Item(106, "106");
         Item item6 = new Item(205, "205");
 
-        System.out.println("OPEN ADDRESS - LINEAR PROBING\n\n");
+        System.out.println("\n\nOPEN ADDRESS - LINEAR PROBING\n\n");
 
         System.out.println("Incluindo os itens...\n");
         hash1.insert(item1);
@@ -77,7 +77,7 @@ public class OpenAdressingMain {
         hash1.print();
 
 
-        System.out.println("OPEN ADDRESS - QUADRATIC PROBING\n\n");
+        System.out.println("\n\nOPEN ADDRESS - QUADRATIC PROBING\n\n");
 
         System.out.println("Incluindo os itens...\n");
         hash2.insert(item1);
@@ -131,7 +131,7 @@ public class OpenAdressingMain {
         hash2.print();
 
 
-        System.out.println("OPEN ADDRESS - DOUBLE HASHING\n\n");
+        System.out.println("\n\nOPEN ADDRESS - DOUBLE HASHING\n\n");
 
         System.out.println("Incluindo os itens...\n");
         hash3.insert(item1);

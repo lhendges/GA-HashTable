@@ -28,6 +28,12 @@ public class HashtableOpenAddressing<V> implements Hashtable<V> {
         }
     }
 
+    /*
+     * Busca o índice com base na função hash;
+     * Se o item a ser excluído estiver na posição do índice, remove o item e o retorna;
+     *
+     * Se o item não estiver na posição do índice, entra num laço para calcular o novo indice com base nas funções de colisão;
+     * */
     @Override
     public Item<V> delete(int key) {
         Item deletedItem = null;
@@ -50,6 +56,11 @@ public class HashtableOpenAddressing<V> implements Hashtable<V> {
         return deletedItem;
     }
 
+    /*
+     * Calcula o índice onde o item deve ser salvo;
+     * Caso a posição esteja ocupada, entra no laço e calcula o novo indice com base nas funções de colisão
+     * Quando a posição calculada estiver disponível, salva o item e retorna o seu indice
+     * */
     @Override
     public int insert(Item<V> item) {
         int primaryIndex = hashFunction(item.getKey(), array.length);
@@ -65,6 +76,12 @@ public class HashtableOpenAddressing<V> implements Hashtable<V> {
         return recalculatedIndex;
     }
 
+    /* Calcula o indice através da função hash
+     * Caso o item esteja na posição calcualada, retorna o item;
+     * Caso não esteja, entra em um laço e recalcula o novo infice com base na função de colisão
+     * Caso o item seja encontrado, retorna o item e finaliza a busca;
+     * Caso o item não seja encontrado, retona null
+     * */
     @Override
     public Item<V> search(int key) {
         int primaryIndex = hashFunction(key, array.length);
@@ -84,6 +101,10 @@ public class HashtableOpenAddressing<V> implements Hashtable<V> {
         return null;
     }
 
+    /*
+     * Perccorre o array printando os items;
+     * Caso a posição esteja vazia, printa vazio
+     * */
     @Override
     public void print() {
         for (int i = 0; i < array.length; i++) {
@@ -93,6 +114,7 @@ public class HashtableOpenAddressing<V> implements Hashtable<V> {
         }
     }
 
+    // Função hash
     private int hashFunction(int key, int m) {
         return key % m;
     }

@@ -15,6 +15,13 @@ public class HashTableSeparateChaining implements Hashtable {
         this.array = new LinkedList[m];
     }
 
+    /*
+     * Primeiramente é calculado o indice através da função hash;
+     * Na sequência, usa-se o método search para buscar o item que deve ser deletado;
+     * Caso o item seja encontrado, vai até a lista onde item está e o remove;
+     * Por final, retorna o item que havia sido localizado anteriormente.
+     * */
+
     @Override
     public Item delete(int key) {
         int index = hashFunction(key, array.length);
@@ -25,6 +32,10 @@ public class HashTableSeparateChaining implements Hashtable {
         return deletedItem;
     }
 
+    /*
+     * Calcula o indíce que o item deve ser armazeado;
+     * vai até essa posição do array e adiciona o item ao final da lista;
+     * */
     @Override
     public int insert(Item item) {
         int index = hashFunction(item.getKey(), array.length);
@@ -33,12 +44,22 @@ public class HashTableSeparateChaining implements Hashtable {
         return index;
     }
 
+    /*
+     * Calcula o índice através da função hash;
+     * Se a posição estiver nula, retorna null;
+     * Caso exista a lista na posição, percorre a lista para encontrar o item solicitado. Caso não encontre, retorna null
+     * */
     @Override
     public Item search(int key) {
         int index = hashFunction(key, array.length);
         return isNull(array[index]) ? null : array[index].stream().filter(item -> item.getKey() == key).findFirst().orElse(null);
     }
 
+
+    /*
+     * Percorre o hashtable imprimindo na tela os itens presentes nas listas;
+     * Caso não haja lista, printa "vazio";
+     * */
     @Override
     public void print() {
         StringBuilder stringBuilder = new StringBuilder();
@@ -64,6 +85,7 @@ public class HashTableSeparateChaining implements Hashtable {
         }
     }
 
+    // Função hash
     private int hashFunction(int key, int m) {
         return key % m;
     }
