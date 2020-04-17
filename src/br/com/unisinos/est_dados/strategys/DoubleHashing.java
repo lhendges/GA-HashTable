@@ -1,5 +1,9 @@
 package br.com.unisinos.est_dados.strategys;
 
+/**
+ * Author: Luis Henrique Hendges
+ **/
+
 public class DoubleHashing extends Strategy {
 
     @Override

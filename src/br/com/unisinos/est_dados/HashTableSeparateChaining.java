@@ -1,5 +1,9 @@
 package br.com.unisinos.est_dados;
 
+/**
+ * Author: Luis Henrique Hendges
+ **/
+
 import br.com.unisinos.est_dados.domain.Item;
 
 import java.util.LinkedList;

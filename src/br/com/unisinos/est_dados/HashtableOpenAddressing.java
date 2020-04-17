@@ -1,5 +1,9 @@
 package br.com.unisinos.est_dados;
 
+/**
+ * Author: Luis Henrique Hendges
+ **/
+
 import br.com.unisinos.est_dados.domain.Item;
 import br.com.unisinos.est_dados.domain.StrategyType;
 import br.com.unisinos.est_dados.strategys.DoubleHashing;

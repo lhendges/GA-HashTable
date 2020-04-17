@@ -1,5 +1,9 @@
 package br.com.unisinos.est_dados.domain;
 
+/**
+ * Author: Luis Henrique Hendges
+ **/
+
 public enum StrategyType {
 
     LINEAR_PROBING(0),
